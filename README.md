@@ -1,6 +1,6 @@
 [![MIT Licensed](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE.md)
 
-Frosty provides easy access to fetch ajax content via Alpine.Js
+Frosty provides easy access to fetch Ajax content via Alpine.Js in Statamic.
 
 ## Requirements
 
