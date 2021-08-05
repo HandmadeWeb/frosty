@@ -4,7 +4,7 @@ namespace HandmadeWeb\Frosty;
 
 use Statamic\Facades\Antlers;
 
-class Frosty
+class FrostyFetcher
 {
     protected $content;
     protected $endpoint;

@@ -2,7 +2,7 @@
 
 namespace HandmadeWeb\Frosty\Tags;
 
-use HandmadeWeb\Frosty\Frosty;
+use HandmadeWeb\Frosty\FrostyFetcher;
 use Illuminate\Support\Facades\Route;
 use Statamic\Tags\Tags;
 
@@ -17,7 +17,17 @@ class FrostyTag extends Tags
      */
     public function index()
     {
-        $frosty = Frosty::make()
+        return $this->fetch();
+    }
+
+    /**
+     * The {{ frosty:fetch }} tag.
+     *
+     * @return string
+     */
+    public function fetch()
+    {
+        $frosty = FrostyFetcher::make()
             ->withAntlers()
             ->withContent($this->content);
 
