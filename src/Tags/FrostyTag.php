@@ -29,7 +29,8 @@ class FrostyTag extends Tags
     {
         $frosty = FrostyFetcher::make()
             ->withAntlers()
-            ->withContent($this->content);
+            ->withContent($this->content)
+            ->withContext($this->context);
 
         if ($this->params['url'] ?? false) {
             $frosty->withEndpoint($this->params['url']);

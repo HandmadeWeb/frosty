@@ -57,19 +57,20 @@ The `\HandmadeWeb\Frosty\FrostyFetcher` class provides a way to easily generate 
 
 You can do this by newing up the class.
 ```php
-new FrostyFetcher(string $content = null, $endpoint = null, bool $shouldUseAntlers = false)
+new FrostyFetcher(string $content = null, ?Collection $context = null, string $endpoint = null, bool $shouldUseAntlers = false)
 ```
 Or by using the make method.
 ```php
-FrostyFetcher::make(string $content = null, $endpoint = null, bool $shouldUseAntlers = false)
+FrostyFetcher::make(string $content = null, ?Collection $context = null, string $endpoint = null, bool $shouldUseAntlers = false)
 ```
 
 All parameters are optional on init and can be individually defined later on.
 ```php
 $frosty = FrostyFetcher::make();
-$frosty->withContent($content);
-$frosty->withEndpoint($endpoint);
-$frosty->withAntlers(false); // or true
+$frosty->withContent($content); // string
+$frosty->withContext($context); // \Statamic\Tags\Context or \Illuminate\Support\Collection (Used to provide Cascaded variables to the content)
+$frosty->withEndpoint($endpoint); // string
+$frosty->withAntlers(false); // bool
 ```
 When using the tag, you'll specify if the endpoint is a url or a route, however when using the class directly, the endpoint is assumed to be a url string, if you wish to pass a route to it instead, then you are welcome to do that.
 
@@ -82,6 +83,7 @@ When you are ready to output the content, then you may call the render method.
 ```php
 FrostyFetcher::make()
     ->withContent($content)
+    ->withContext($context)
     ->withEndpoint($endpoint)
     ->withAntlers(false)
     ->render();

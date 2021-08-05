@@ -2,24 +2,57 @@
 
 namespace HandmadeWeb\Frosty;
 
+use Illuminate\Support\Collection;
 use Statamic\Facades\Antlers;
 
 class FrostyFetcher
 {
     protected $content;
+    protected $context;
     protected $endpoint;
     protected $shouldUseAntlers;
 
-    public static function make(string $content = null, string $endpoint = null, bool $shouldUseAntlers = false): static
+    public static function make(string $content = null, ?Collection $context = null, string $endpoint = null, bool $shouldUseAntlers = false): static
     {
-        return new static($content, $endpoint, $shouldUseAntlers);
+        return new static($content, $context, $endpoint, $shouldUseAntlers);
     }
 
-    public function __construct(string $content = null, string $endpoint = null, bool $shouldUseAntlers = false)
+    public function __construct(string $content = null, ?Collection $context = null, string $endpoint = null, bool $shouldUseAntlers = false)
     {
         $this->content = $content;
+        $this->context = $context;
         $this->endpoint = $endpoint;
         $this->shouldUseAntlers = $shouldUseAntlers;
+    }
+
+    public function content(): ?string
+    {
+        return $this->shouldUseAntlers() ? Antlers::parse($this->content, $this->context()) : $this->content;
+    }
+
+    public function context(): Collection
+    {
+        if (is_null($this->context)) {
+            $this->context = collect([]);
+        }
+
+        return $this->context;
+    }
+
+    public function endpoint(): ?string
+    {
+        return $this->endpoint;
+    }
+
+    public function render(): string
+    {
+        if ($this->endpoint()) {
+            return view('frosty::fetcher', [
+                'frosty' => $this,
+            ]);
+        }
+
+        return $this->content();
     }
 
     public function shouldUseAntlers(): bool
@@ -34,11 +67,6 @@ class FrostyFetcher
         return $this;
     }
 
-    public function content(): ?string
-    {
-        return $this->shouldUseAntlers() ? Antlers::parse($this->content) : $this->content;
-    }
-
     public function withContent(string $content): static
     {
         $this->content = $content;
@@ -46,9 +74,11 @@ class FrostyFetcher
         return $this;
     }
 
-    public function endpoint(): ?string
+    public function withContext(Collection $context): static
     {
-        return $this->endpoint;
+        $this->context = $context;
+
+        return $this;
     }
 
     public function withEndpoint(string $endpoint): static
@@ -56,16 +86,5 @@ class FrostyFetcher
         $this->endpoint = $endpoint;
 
         return $this;
-    }
-
-    public function render(): string
-    {
-        if ($this->endpoint()) {
-            return view('frosty::fetcher', [
-                'frosty' => $this,
-            ]);
-        }
-
-        return $this->content();
     }
 }
