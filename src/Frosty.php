@@ -4,36 +4,41 @@ namespace HandmadeWeb\Frosty;
 
 use Illuminate\Support\Collection;
 use Statamic\Facades\Antlers;
+use Statamic\Tags\Context;
 
-class FrostyFetcher
+class Frosty
 {
     protected $content;
     protected $context;
     protected $endpoint;
-    protected $shouldUseAntlers;
+    protected $antlers;
 
-    public static function make(string $content = null, ?Collection $context = null, string $endpoint = null, bool $shouldUseAntlers = false): static
+    public static function make(string $content = null, array | Collection $context = [], string $endpoint = null, bool $antlers = false): static
     {
-        return new static($content, $context, $endpoint, $shouldUseAntlers);
+        return new static($content, $context, $endpoint, $antlers);
     }
 
-    public function __construct(string $content = null, ?Collection $context = null, string $endpoint = null, bool $shouldUseAntlers = false)
+    public function __construct(string $content = null, array | Collection $context = [], string $endpoint = null, bool $antlers = false)
     {
         $this->content = $content;
         $this->context = $context;
         $this->endpoint = $endpoint;
-        $this->shouldUseAntlers = $shouldUseAntlers;
+        $this->antlers = $antlers;
     }
 
     public function content(): ?string
     {
-        return $this->shouldUseAntlers() ? Antlers::parse($this->content, $this->context()) : $this->content;
+        return $this->antlers() ? Antlers::parse($this->content, $this->context()) : $this->content;
     }
 
-    public function context(): Collection
+    public function context(): Context
     {
-        if (is_null($this->context)) {
-            $this->context = collect([]);
+        if (is_array($this->context)) {
+            $this->context = new Context($this->context);
+        }
+
+        if (! $this->context instanceof Context) {
+            $this->context = new Context($this->context->all());
         }
 
         return $this->context;
@@ -55,14 +60,14 @@ class FrostyFetcher
         return $this->content();
     }
 
-    public function shouldUseAntlers(): bool
+    public function antlers(): bool
     {
-        return $this->shouldUseAntlers;
+        return $this->antlers;
     }
 
-    public function withAntlers(bool $shouldUseAntlers = true): static
+    public function withAntlers(bool $antlers = true): static
     {
-        $this->shouldUseAntlers = $shouldUseAntlers;
+        $this->antlers = $antlers;
 
         return $this;
     }
@@ -74,7 +79,7 @@ class FrostyFetcher
         return $this;
     }
 
-    public function withContext(Collection $context): static
+    public function withContext(array | Collection $context): static
     {
         $this->context = $context;
 
