@@ -72,6 +72,8 @@ $frosty->withEndpoint($endpoint);
 $frosty->withAntlers(false); // or true
 ```
 When using the tag, you'll specify if the endpoint is a url or a route, however when using the class directly, the endpoint is assumed to be a url string, if you wish to pass a route to it instead, then you are welcome to do that.
+
+Unlike when using the Frosty tag, the FrostyFetcher class can directly accept parameters on the route below.
 ```php
 FrostyFetcher::make()->withEndpoint(route('my-awesome-route'))
 ```
@@ -87,6 +89,8 @@ FrostyFetcher::make()
 
 ## View
 Should you wish to override the vendor/handmadeweb/frosty/resources/views/fetcher.blade.php view, you are welcome to do that, by placing `fetcher.blade.php`, `fetcher.antlers.php` or `fetcher.antlers.html` in the resources/vendor/frosty directory from the root of your project.
+The class will be passed down to the view and will be called `frosty`.
+You may then use the `$frosty->content()` and `$frosty->endpoint()` methods in your view override.
 
 ## Changelog
 
