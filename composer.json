@@ -1,0 +1,19 @@
+{
+    "name": "handmadeweb/frosty",
+    "autoload": {
+        "psr-4": {
+            "HandmadeWeb\\Frosty\\": "src"
+        }
+    },
+    "extra": {
+        "statamic": {
+            "name": "Frosty",
+            "description": "Frosty addon"
+        },
+        "laravel": {
+            "providers": [
+                "HandmadeWeb\\Frosty\\ServiceProvider"
+            ]
+        }
+    }
+}
