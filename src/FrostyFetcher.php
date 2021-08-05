@@ -10,12 +10,12 @@ class FrostyFetcher
     protected $endpoint;
     protected $shouldUseAntlers;
 
-    public static function make(string $content = null, $endpoint = null, bool $shouldUseAntlers = false): static
+    public static function make(string $content = null, string $endpoint = null, bool $shouldUseAntlers = false): static
     {
         return new static($content, $endpoint, $shouldUseAntlers);
     }
 
-    public function __construct(string $content = null, $endpoint = null, bool $shouldUseAntlers = false)
+    public function __construct(string $content = null, string $endpoint = null, bool $shouldUseAntlers = false)
     {
         $this->content = $content;
         $this->endpoint = $endpoint;
