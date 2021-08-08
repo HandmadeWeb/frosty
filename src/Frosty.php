@@ -20,12 +20,15 @@ class Frosty
 
     public static function mode(): string
     {
-        $mode = config('frosty.mode', 'native');
-        if (! is_string($mode) || ! in_array($mode, ['native', 'alpine'])) {
-            $mode = 'native';
+        $defaultMode = 'native';
+
+        if ($mode = config('frosty.mode')) {
+            if (! in_array($mode, ['native', 'alpine'])) {
+                $mode = $defaultMode;
+            }
         }
 
-        return $mode;
+        return $mode ?? $defaultMode;
     }
 
     public static function scripts(): string

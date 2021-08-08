@@ -20,7 +20,7 @@
     "extra": {
         "statamic": {
             "name": "Frosty",
-            "description": "Frosty addon"
+            "description": "Frosty provides easy access to fetch Ajax content in Statamic."
         },
         "laravel": {
             "providers": [

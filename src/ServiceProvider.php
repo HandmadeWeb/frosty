@@ -16,6 +16,12 @@ class ServiceProvider extends AddonServiceProvider
     {
         parent::boot();
 
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__.'/../config/frosty.php' => config_path('frosty.php'),
+            ], 'config');
+        }
+
         $this->bootDirectives();
     }
 
