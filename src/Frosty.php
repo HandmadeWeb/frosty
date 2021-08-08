@@ -11,24 +11,43 @@ class Frosty
     protected $content;
     protected $context;
     protected $endpoint;
-    protected $antlers;
+    protected $mode;
 
-    public static function make(string $content = null, array | Collection $context = [], string $endpoint = null, bool $antlers = false): static
+    public static function make(string $endpoint = null): static
     {
-        return new static($content, $context, $endpoint, $antlers);
+        return new static($endpoint);
     }
 
-    public function __construct(string $content = null, array | Collection $context = [], string $endpoint = null, bool $antlers = false)
+    public static function mode(): string
     {
-        $this->content = $content;
-        $this->context = $context;
+        $mode = config('frosty.mode', 'native');
+        if (! is_string($mode) || ! in_array($mode, ['native', 'alpine'])) {
+            $mode = 'native';
+        }
+
+        return $mode;
+    }
+
+    public static function scripts(): string
+    {
+        if (static::mode() === 'native') {
+            $script = 'https://cdn.jsdelivr.net/npm/datafetcher.js@1.0.0/dist/data-fetcher.min.js';
+
+            return "<script src='{$script}'></script>";
+        }
+
+        return '';
+    }
+
+    public function __construct(string $endpoint = null)
+    {
         $this->endpoint = $endpoint;
-        $this->antlers = $antlers;
+        $this->mode = static::mode();
     }
 
-    public function content(): ?string
+    public function content(): string
     {
-        return $this->antlers() ? Antlers::parse($this->content, $this->context()) : $this->content;
+        return empty($this->content) ? '' : Antlers::parse($this->content, $this->context());
     }
 
     public function context(): Context
@@ -52,24 +71,12 @@ class Frosty
     public function render(): string
     {
         if ($this->endpoint()) {
-            return view('frosty::fetcher', [
+            return view("frosty::{$this->mode}", [
                 'frosty' => $this,
             ]);
         }
 
         return $this->content();
-    }
-
-    public function antlers(): bool
-    {
-        return $this->antlers;
-    }
-
-    public function withAntlers(bool $antlers = true): static
-    {
-        $this->antlers = $antlers;
-
-        return $this;
     }
 
     public function withContent(string $content): static

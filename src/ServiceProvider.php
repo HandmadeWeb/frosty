@@ -16,6 +16,15 @@ class ServiceProvider extends AddonServiceProvider
     {
         parent::boot();
 
+        $this->bootDirectives();
+    }
+
+    public function bootDirectives()
+    {
+        Blade::directive('frostyScripts', function () {
+            return "<?php echo \HandmadeWeb\Frosty\Frosty::scripts(); ?>";
+        });
+
         Blade::directive('frosty', function ($expression) {
             return "<?php echo \HandmadeWeb\Frosty\Frosty::make({$expression})->render(); ?>";
         });

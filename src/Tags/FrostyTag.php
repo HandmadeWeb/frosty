@@ -27,11 +27,9 @@ class FrostyTag extends Tags
      */
     public function fetch()
     {
-        $frosty = Frosty::make(
-            content: $this->content,
-            context: $this->context,
-            antlers: true
-        );
+        $frosty = Frosty::make()
+            ->withContent($this->content)
+            ->withContent($this->context);
 
         if ($this->params['url'] ?? false) {
             $frosty->withEndpoint($this->params['url']);
@@ -40,5 +38,15 @@ class FrostyTag extends Tags
         }
 
         return $frosty->render();
+    }
+
+    /**
+     * The {{ frosty:scripts }} tag.
+     *
+     * @return string
+     */
+    public function scripts()
+    {
+        return Frosty::scripts();
     }
 }
