@@ -34,7 +34,8 @@ class Frosty
     public static function scripts(): string
     {
         if (static::mode() === 'native') {
-            $script = 'https://cdn.jsdelivr.net/npm/datafetcher.js@1.0.0/dist/data-fetcher.min.js';
+            $version = '1.1.2';
+            $script = "https://cdn.jsdelivr.net/gh/handmadeweb/datafetcher.js@{$version}/dist/data-fetcher.min.js";
 
             return "<script src='{$script}'></script>";
         }
