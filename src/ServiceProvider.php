@@ -9,13 +9,15 @@ use Statamic\Providers\AddonServiceProvider;
 
 class ServiceProvider extends AddonServiceProvider
 {
-    protected $fieldtypes = [
-        FrostyFieldType::class,
-    ];
+    // WIP
+    // protected $fieldtypes = [
+    //     FrostyFieldType::class,
+    // ];
 
-    protected $scripts = [
-        __DIR__.'/../public/js/frosty.cp.js',
-    ];
+    // WIP
+    // protected $scripts = [
+    //     __DIR__.'/../public/js/frosty.cp.js',
+    // ];
 
     protected $tags = [
         FrostyTag::class,
