@@ -56,6 +56,8 @@ class Frosty
 
     public function context(): Context
     {
+        $this->context ??= [];
+
         if (is_array($this->context)) {
             $this->context = new Context($this->context);
         }
@@ -77,7 +79,7 @@ class Frosty
         if ($this->endpoint()) {
             return view("frosty::{$this->mode}", [
                 'frosty' => $this,
-            ]);
+            ])->render();
         }
 
         return $this->content();
