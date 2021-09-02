@@ -57,11 +57,7 @@ class Frosty
     public function context(): Context
     {
         if (! $this->context) {
-            $this->context = [];
-        }
-
-        if (is_array($this->context)) {
-            $this->context = new Context($this->context);
+            $this->withContext([]);
         }
 
         if (! $this->context instanceof Context) {
@@ -80,7 +76,8 @@ class Frosty
     {
         if ($this->endpoint()) {
             return view("frosty::{$this->mode}", [
-                'frosty' => $this,
+                'content' => $this->content(),
+                'endpoint' => $this->endpoint(),
             ])->render();
         }
 
@@ -96,6 +93,10 @@ class Frosty
 
     public function withContext(array | Collection $context): static
     {
+        if (is_array($context)) {
+            $context = collect($context);
+        }
+
         $this->context = $context;
 
         return $this;
