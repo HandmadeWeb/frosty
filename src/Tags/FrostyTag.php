@@ -4,11 +4,14 @@ namespace HandmadeWeb\Frosty\Tags;
 
 use HandmadeWeb\Frosty\Frosty;
 use Illuminate\Support\Facades\Route;
+use Statamic\Support\Arr;
 use Statamic\Tags\Tags;
 
 class FrostyTag extends Tags
 {
     protected static $handle = 'frosty';
+
+    protected $endpoint;
 
     /**
      * The {{ frosty }} tag.
@@ -31,10 +34,16 @@ class FrostyTag extends Tags
             ->withContent($this->content)
             ->withContext($this->context);
 
-        if ($this->params['url'] ?? false) {
-            $frosty->withEndpoint($this->params['url']);
-        } elseif ($this->params['route'] ?? false && Route::has($this->params['route'])) {
-            $frosty->withEndpoint(route($this->params['route']));
+        if (Arr::get($this->params, 'endpoint')) {
+            $this->endpoint = Arr::get($this->params, 'endpoint');
+        } elseif (Arr::get($this->params, 'url')) {
+            $this->endpoint = Arr::get($this->params, 'url');
+        } elseif (Arr::get($this->params, 'route') && Route::has(Arr::get($this->params, 'route'))) {
+            $this->endpoint = route(Arr::get($this->params, 'route'));
+        }
+
+        if ($this->endpoint) {
+            $frosty->withEndpoint($this->endpoint);
         }
 
         return $frosty->render();
