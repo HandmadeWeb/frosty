@@ -1,1 +1,1 @@
-<div data-fetcher="{{ $frosty->endpoint() }}">{{ $frosty->content() }}</div>
+<div data-fetcher="{{ $endpoint }}">{!! $content !!}</div>
