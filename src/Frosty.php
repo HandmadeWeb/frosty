@@ -56,7 +56,9 @@ class Frosty
 
     public function context(): Context
     {
-        $this->context ??= [];
+        if (! $this->context) {
+            $this->context = [];
+        }
 
         if (is_array($this->context)) {
             $this->context = new Context($this->context);
