@@ -55,6 +55,10 @@ The url can be anywhere.
 ```antlers
 {{ frosty:fetch url="/ajax/signup-form" }}
 ```
+Or
+```antlers
+{{ frosty:fetch endpoint="/ajax/signup-form" }}
+```
 
 ### Pulling in content from a route.
 Routes must be a GET route and cannot currently accept parameters.
@@ -62,12 +66,12 @@ Routes must be a GET route and cannot currently accept parameters.
 {{ frosty:fetch route="ajax.signup-form" }}
 ```
 
-Please note that the above two examples cannot be combined into a single tag call.
+Please note that the above three examples cannot be combined into a single tag call.
 ```antlers
-{{ frosty:fetch url="/ajax/signup-form" route="ajax.signup-form" }}
-{{ frosty:fetch route="ajax.signup-form" url="/ajax/signup-form" }}
+{{ frosty:fetch endpoint="/ajax/signup-form" url="/ajax/signup-form" route="ajax.signup-form" }}
+{{ frosty:fetch route="ajax.signup-form" endpoint="/ajax/signup-form" url="/ajax/signup-form" }}
 ```
-The url will always be used as the endpoint location.
+The first found parameter will be used, parameters are checked in the order: endpoint, url, route.
 
 ### Using initial content then pulling new content.
 This works with both the route and url options.
