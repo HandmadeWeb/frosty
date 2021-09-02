@@ -29,7 +29,7 @@ class FrostyTag extends Tags
     {
         $frosty = Frosty::make()
             ->withContent($this->content)
-            ->withContent($this->context);
+            ->withContext($this->context);
 
         if ($this->params['url'] ?? false) {
             $frosty->withEndpoint($this->params['url']);
