@@ -161,4 +161,4 @@ Please see [CONTRIBUTING](https://github.com/handmadeweb/frosty/blob/main/CONTRI
 
 ## License
 
-The MIT License (MIT). Please see [License File](https://github.com/handmadeweb/frosty/blob/main/LICENSE.md) for more information.
+The MIT License (MIT). Please see [License File](https://github.com/handmadeweb/frosty/blob/main/LICENSE) for more information.
