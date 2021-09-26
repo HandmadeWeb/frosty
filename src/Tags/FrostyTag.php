@@ -30,7 +30,7 @@ class FrostyTag extends Tags
      */
     public function fetch()
     {
-        $frosty = Frosty::make()
+        $frosty = Frosty::make(mode: Arr::get($this->params, 'mode'))
             ->withContent($this->content)
             ->withContext($this->context);
 

@@ -5,6 +5,7 @@ namespace HandmadeWeb\Frosty;
 use Illuminate\Support\Collection;
 use Statamic\Facades\Antlers;
 use Statamic\Tags\Context;
+use Statamic\View\View;
 
 class Frosty
 {
@@ -13,22 +14,16 @@ class Frosty
     protected $endpoint;
     protected $mode;
 
-    public static function make(string $endpoint = null): static
+    public static function make(string $endpoint = null, ?string $mode = null): static
     {
-        return new static($endpoint);
+        $mode = $mode ? $mode : static::mode();
+
+        return new static($endpoint, static::mode($mode));
     }
 
-    public static function mode(): string
+    public static function mode(?string $mode = null): string
     {
-        $defaultMode = 'native';
-
-        if ($mode = config('frosty.mode')) {
-            if (! in_array($mode, ['native', 'alpine'])) {
-                $mode = $defaultMode;
-            }
-        }
-
-        return $mode ?? $defaultMode;
+        return $mode ? $mode : config('frosty.mode', 'native');
     }
 
     public static function scripts(): string
@@ -43,10 +38,10 @@ class Frosty
         return '';
     }
 
-    public function __construct(string $endpoint = null)
+    public function __construct(string $endpoint = null, ?string $mode = null)
     {
         $this->endpoint = $endpoint;
-        $this->mode = static::mode();
+        $this->mode = static::mode($mode);
     }
 
     public function content(): string
@@ -75,9 +70,10 @@ class Frosty
     public function render(): string
     {
         if ($this->endpoint()) {
-            return view("frosty::{$this->mode}", [
+            return View::first(["frosty::{$this->mode}", 'frosty::not-found'], [
                 'content' => $this->content(),
                 'endpoint' => $this->endpoint(),
+                'mode' => $this->mode,
             ])->render();
         }
 

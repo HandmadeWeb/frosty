@@ -25,14 +25,16 @@ php artisan vendor:publish --tag="config" --provider="HandmadeWeb\Frosty\Service
 #### Native Method
 If you aren't using Alpine Js in your application then you'll need to load [handmadeweb/datafetcher.js](https://github.com/HandmadeWeb/datafetcher.js) in your footer, you can either do this manually, or via the provided helpers for Alpine: `{{ frosty:scripts }}`, Blade: `@frostyScripts` or PHP: `\HandmadeWeb\Frosty\Frosty::scripts();`
 
-#### Alpine Js Method
+This method uses the `native.blade.php` view, you are free to override it in `resources/vendor/frosty/`, you will have access to the `content`, `endpoint` and `mode` variables.
 
-If you are using Alpine Js in your application then you may update your Frosty configuration to use Alpine.
+#### Alpine.Js Method
+
+If you are using Alpine.Js in your application then you may update your Frosty configuration to use Alpine.
 ```php
 /*
-* Javascript Mode
+* Mode
 *
-* Which Javascript mode to use?
+* Which mode to use?
 *
 * native: uses https://github.com/handmadeweb/datafetcher.js
 * - If you aren't using Alpine Js in your application then you'll need to load handmadeweb/datafetcher.js in your footer.
@@ -44,6 +46,35 @@ If you are using Alpine Js in your application then you may update your Frosty c
 'mode' => 'alpine',
 ```
 
+This method uses the `alpine.blade.php` view, you are free to override it in `resources/vendor/frosty/`, you will have access to the `content`, `endpoint` and `mode` variables.
+
+#### Custom Method
+
+You are free to use a custom method, you may do so by defining a new view template for Frosty to use under `resources/vendor/frosty`, the filenames `alpine`, `native` and `not-found` are considered to be reserved, although you may override them if you wish.
+
+Once you have created a new view for your mode, you will have access to the `content`, `endpoint` and `mode` variables, you may then use this to provide the content or endpoint to your custom method.
+
+Then it is just a matter of updating the mode to use the name of your new method/view.
+
+Lets say we created a file called `myCustomVueMode.blade.php` which might contain something like,
+```blade
+<vue-fetcher endpoint="{{ $endpoint }}" initial-content="{!! $content !!}" />
+```
+
+You would then update your mode to:
+```php
+'mode' => 'myCustomVueMode',
+```
+
+In the event that your custom method/mode doesn't have a corresponding view file, then Frosty will insert some HTML comments in the location of where it would have rendered your method.
+
+```html
+<!-- Frosty could not be rendered, Mode not found -->
+
+<!-- If the page is being viewed by a Super Administrator, then the below will also be inserted as a comment. -->
+<!-- Mode: {{ $mode }} -->
+<!-- Endpoint: {{ $endpoint }} -->
+```
 
 ## Antlers Usage
 Using Frosty in `Antlers` can be done by using the `frosty` tag or if you are using an `.antlers.php` template file by using the `class` (see class instructions)
@@ -81,6 +112,15 @@ This works with both the route and url options.
 {{ /frosty:fetch }}
 ```
 
+### Using a different mode/view.
+You are free to use any other mode/view that might be available for Frosty to use, separately to whatever you might have set as the config default.
+You can do this by passing the mode parameter, which will relate to the name of a view file located in `resources/vendor/frosty/`
+```antlers
+{{ frosty:fetch route="ajax.news" mode="myCustomVueMode" }}
+    <p>Finding something juicy!</p>
+{{ /frosty:fetch }}
+```
+
 ## Blade Usage
 Using Frosty in `Blade` can be done by using the `frosty` blade directive or by using the `class` (see class instructions)
 The blade directive currently doesn't accept providing content or context, If you need to use that functionality the you'll need to use the class chaining method.
@@ -105,6 +145,13 @@ You can also use named arguments in PHP 8+ to specify particular parameters.
 @frosty(route('ajax.sponsors', 'featured'))
 ```
 
+### Using a different mode/view.
+You are free to use any other mode/view that might be available for Frosty to use, separately to whatever you might have set as the config default.
+You can do this by passing the mode parameter, which will relate to the name of a view file located in `resources/vendor/frosty/`
+```blade
+@frosty(route('ajax.sponsors', 'featured'), 'myCustomVueMode')
+```
+
 ## Class Usage
 New up the class.
 ```php
@@ -117,6 +164,13 @@ Frosty::make(string $endpoint = null)
 You can also use named arguments in PHP 8+ to specify particular parameters.
 ```php
 $frosty = Frosty::make(endpoint: '/ajax/random-quote');
+```
+
+You are free to use any other mode/view that might be available for Frosty to use, separately to whatever you might have set as the config default.
+You can do this by passing the mode (or second) parameter, which will relate to the name of a view file located in `resources/vendor/frosty/`
+```php
+$frosty = Frosty::make('/ajax/random-quote', 'myCustomVueMode');
+// You are free to use the named argument style of mode: 'myCustomVueMode'
 ```
 
 Aditional methods can be chained to add content and context, or to set the endpoint.
